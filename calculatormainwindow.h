@@ -16,10 +16,22 @@ class CalculatorMainWindow : public QMainWindow {
    CalculatorMainWindow(QWidget *parent = nullptr);
    ~CalculatorMainWindow();
 
-   public slots:
+   private slots:
    void digitPressed();
+
+   void on_pushButton_equal_clicked();
+
+   void on_pushButton_add_clicked();
+
+   void on_pushButton_subtract_clicked();
+
+   void on_pushButton_multiply_clicked();
+
+   void on_pushButton_divide_clicked();
 
    private:
    Ui::CalculatorMainWindow *ui;
+   int currentValue;
+   char currentOperator;
 };
 #endif // CALCULATORMAINWINDOW_H
