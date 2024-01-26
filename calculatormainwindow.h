@@ -16,6 +16,9 @@ class CalculatorMainWindow : public QMainWindow {
    CalculatorMainWindow(QWidget *parent = nullptr);
    ~CalculatorMainWindow();
 
+   public slots:
+   void digitPressed();
+
    private:
    Ui::CalculatorMainWindow *ui;
 };
