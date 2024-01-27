@@ -31,6 +31,8 @@ class CalculatorMainWindow : public QMainWindow {
    void on_pushButton_multiply_clicked(); // Handles '*' button click.
    void on_pushButton_divide_clicked(); // Handles '/' button click.
 
+   void on_clearButton_clicked();
+
    private:
    // Pointer to the UI class generated from the .ui file.
    Ui::CalculatorMainWindow *ui;

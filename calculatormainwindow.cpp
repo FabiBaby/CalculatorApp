@@ -25,6 +25,7 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
    connect(ui->pushButton_8, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_9, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
 
+   // Connect decimal button to the digitPressed slot.
    connect(ui->decimalButton, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
 
    // Connect the '=' button to its slot, after disconnecting any existing connections.
@@ -45,6 +46,8 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
 
    disconnect(ui->pushButton_divide, SIGNAL(clicked()), this, SLOT(on_pushButton_divide_clicked()));
    connect(ui->pushButton_divide, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_divide_clicked);
+
+   ui->lineEdit->setText("0");
 }
 
 // Destructor of CalculatorMainWindow.
@@ -55,6 +58,12 @@ CalculatorMainWindow::~CalculatorMainWindow() {
 // Slot for handling digit button presses.
 void CalculatorMainWindow::digitPressed()
 {
+   if(ui->lineEdit->text() == "0"){
+      ui->lineEdit->clear();
+   }
+
+   ui->clearButton->setText("C");
+
    QPushButton *button = qobject_cast<QPushButton*>(sender());
    if(button){
       // Append the text of the pressed button (a digit) to the lineEdit display.
@@ -126,3 +135,21 @@ void CalculatorMainWindow::on_pushButton_divide_clicked()
    currentOperator = '/';
    ui->lineEdit->clear();
 }
+
+void CalculatorMainWindow::on_clearButton_clicked()
+{
+   // If the clear button is AC then it clears everything from the memory
+   if(ui->clearButton->text() == "AC"){
+      currentValue = 0.0;
+      currentOperator = '\0';
+      ui->lineEdit->clear();
+      ui->clearButton->setText("C");
+   }
+   // Otherwise if the clear button is C then it clears only the current entry
+   else{
+      ui->lineEdit->clear();
+      ui->clearButton->setText("AC");
+      ui->lineEdit->setText("0");
+   }
+}
+
