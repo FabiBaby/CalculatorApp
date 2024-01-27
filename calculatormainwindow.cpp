@@ -6,6 +6,9 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CalculatorMainWindow) {
    ui->setupUi(this);
 
+   currentValue = 0.0;
+   currentOperator = '\0';
+
    connect(ui->pushButton_0, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_1, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_2, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
@@ -17,9 +20,20 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
    connect(ui->pushButton_8, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_9, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
 
+   disconnect(ui->pushButton_equal, SIGNAL(clicked()), this, SLOT(on_pushButton_equal_clicked()));
+   connect(ui->pushButton_equal, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_equal_clicked);
+
+   // Disconnect potentially connected signals before reconnecting
+   disconnect(ui->pushButton_add, SIGNAL(clicked()), this, SLOT(on_pushButton_add_clicked()));
    connect(ui->pushButton_add, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_add_clicked);
+
+   disconnect(ui->pushButton_subtract, SIGNAL(clicked()), this, SLOT(on_pushButton_subtract_clicked()));
    connect(ui->pushButton_subtract, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_subtract_clicked);
+
+   disconnect(ui->pushButton_multiply, SIGNAL(clicked()), this, SLOT(on_pushButton_multiply_clicked()));
    connect(ui->pushButton_multiply, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_multiply_clicked);
+
+   disconnect(ui->pushButton_divide, SIGNAL(clicked()), this, SLOT(on_pushButton_divide_clicked()));
    connect(ui->pushButton_divide, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_divide_clicked);
 }
 
@@ -39,7 +53,29 @@ void CalculatorMainWindow::digitPressed()
 
 void CalculatorMainWindow::on_pushButton_equal_clicked()
 {
+   double result = 0.0;
+   double num = ui->lineEdit->text().toDouble();
 
+   if(currentOperator == '+'){
+      result = currentValue + num;
+   }
+   else if(currentOperator == '-'){
+      result = currentValue - num;
+   }
+   else if(currentOperator == '*'){
+      result = currentValue * num;
+   }
+   else if(currentOperator == '/'){
+      if(num == 0){
+         ui->lineEdit->setText("Error");
+         return;
+      }
+      else{
+         result = currentValue / num;
+      }
+   }
+
+   ui->lineEdit->setText(QString::number(result));
 }
 
 

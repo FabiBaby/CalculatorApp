@@ -31,7 +31,7 @@ class CalculatorMainWindow : public QMainWindow {
 
    private:
    Ui::CalculatorMainWindow *ui;
-   int currentValue;
+   double currentValue;
    char currentOperator;
 };
 #endif // CALCULATORMAINWINDOW_H
