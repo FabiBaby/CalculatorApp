@@ -1,15 +1,20 @@
 #include "calculatormainwindow.h"
 #include "./ui_calculatormainwindow.h"
 
-//
+// Constructor for CalculatorMainWindow.
+// Constructor for CalculatorMainWindow.
 CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CalculatorMainWindow) {
-   ui->setupUi(this);
+   ui->setupUi(this); // Setting up the user interface.
 
+   // Initialize the current value and operator for calculations.
    currentValue = 0.0;
    currentOperator = '\0';
 
+   // Connect digit buttons to the digitPressed slot.
+   // These connections ensure that digitPressed is called when any digit button is clicked.
    connect(ui->pushButton_0, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
+   // ... similar connections for pushButton_1 to pushButton_9 ...
    connect(ui->pushButton_1, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_2, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_3, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
@@ -20,12 +25,15 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
    connect(ui->pushButton_8, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_9, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
 
+   // Connect the '=' button to its slot, after disconnecting any existing connections.
+   // This is done to prevent multiple connections which could cause the slot to be called multiple times.
    disconnect(ui->pushButton_equal, SIGNAL(clicked()), this, SLOT(on_pushButton_equal_clicked()));
    connect(ui->pushButton_equal, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_equal_clicked);
 
-   // Disconnect potentially connected signals before reconnecting
+   // Similar connections for the add, subtract, multiply, and divide buttons.
    disconnect(ui->pushButton_add, SIGNAL(clicked()), this, SLOT(on_pushButton_add_clicked()));
    connect(ui->pushButton_add, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_add_clicked);
+   // ... similar for subtract, multiply, and divide ...
 
    disconnect(ui->pushButton_subtract, SIGNAL(clicked()), this, SLOT(on_pushButton_subtract_clicked()));
    connect(ui->pushButton_subtract, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_subtract_clicked);
@@ -37,25 +45,29 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
    connect(ui->pushButton_divide, &QPushButton::clicked, this, &CalculatorMainWindow::on_pushButton_divide_clicked);
 }
 
-//Destructor
-CalculatorMainWindow::~CalculatorMainWindow() { delete ui; }
+// Destructor of CalculatorMainWindow.
+CalculatorMainWindow::~CalculatorMainWindow() {
+   delete ui; // Cleans up the UI to free memory.
+}
 
-//Slot that updates the display to show the number pressed
+// Slot for handling digit button presses.
 void CalculatorMainWindow::digitPressed()
 {
    QPushButton *button = qobject_cast<QPushButton*>(sender());
    if(button){
-      //Append the button text to display
+      // Append the text of the pressed button (a digit) to the lineEdit display.
       ui->lineEdit->setText(ui->lineEdit->text() + button->text());
    }
 }
 
 
+// Slot for handling '=' button click event.
 void CalculatorMainWindow::on_pushButton_equal_clicked()
 {
    double result = 0.0;
-   double num = ui->lineEdit->text().toDouble();
+   double num = ui->lineEdit->text().toDouble(); // Get the current number from the display.
 
+   // Perform the operation based on the current operator and update result.
    if(currentOperator == '+'){
       result = currentValue + num;
    }
@@ -66,6 +78,7 @@ void CalculatorMainWindow::on_pushButton_equal_clicked()
       result = currentValue * num;
    }
    else if(currentOperator == '/'){
+      // Check for division by zero error.
       if(num == 0){
          ui->lineEdit->setText("Error");
          return;
@@ -75,50 +88,40 @@ void CalculatorMainWindow::on_pushButton_equal_clicked()
       }
    }
 
+   // Set the result to the display.
    ui->lineEdit->setText(QString::number(result));
 }
 
-
+// Slots for handling operation button clicks (add, subtract, multiply, divide).
+// These slots store the current value from the display, set the current operator, and clear the display.
 void CalculatorMainWindow::on_pushButton_add_clicked()
 {
-   //Takes the current number on the display and stores to currentValue and converts it to double from a string
-   currentValue = ui->lineEdit->text().toDouble();
-
-   currentOperator = '+';
-
-   ui->lineEdit->clear();
+   currentValue = ui->lineEdit->text().toDouble(); // Store current value.
+   currentOperator = '+'; // Set operator.
+   ui->lineEdit->clear(); // Clear display.
 }
 
 
 void CalculatorMainWindow::on_pushButton_subtract_clicked()
 {
-   //Takes the current number on the display and stores to currentValue and converts it to double from a string
    currentValue = ui->lineEdit->text().toDouble();
-
    currentOperator = '-';
-
    ui->lineEdit->clear();
 }
 
 
 void CalculatorMainWindow::on_pushButton_multiply_clicked()
 {
-   //Takes the current number on the display and stores to currentValue and converts it to double from a string
    currentValue = ui->lineEdit->text().toDouble();
-
    currentOperator = '*';
-
    ui->lineEdit->clear();
 }
 
 
 void CalculatorMainWindow::on_pushButton_divide_clicked()
 {
-   //Takes the current number on the display and stores to currentValue and converts it to double from a string
    currentValue = ui->lineEdit->text().toDouble();
-
    currentOperator = '/';
-
    ui->lineEdit->clear();
 }
 
