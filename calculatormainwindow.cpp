@@ -25,6 +25,8 @@ CalculatorMainWindow::CalculatorMainWindow(QWidget *parent)
    connect(ui->pushButton_8, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
    connect(ui->pushButton_9, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
 
+   connect(ui->decimalButton, &QPushButton::clicked, this, &CalculatorMainWindow::digitPressed);
+
    // Connect the '=' button to its slot, after disconnecting any existing connections.
    // This is done to prevent multiple connections which could cause the slot to be called multiple times.
    disconnect(ui->pushButton_equal, SIGNAL(clicked()), this, SLOT(on_pushButton_equal_clicked()));
@@ -124,4 +126,3 @@ void CalculatorMainWindow::on_pushButton_divide_clicked()
    currentOperator = '/';
    ui->lineEdit->clear();
 }
-
